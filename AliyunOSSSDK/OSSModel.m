@@ -257,14 +257,24 @@
 
 - (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl
 {
-    return [self initWithAuthServerUrl:authServerUrl responseDecoder:nil];
+    return [self initWithAuthServerUrl:authServerUrl withToken:nil responseDecoder:nil];
 }
 
-- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(nullable OSSResponseDecoderBlock)decoder
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl withToken:(NSString *) token
+{
+    return [self initWithAuthServerUrl:authServerUrl withToken:token responseDecoder:nil];
+}
+
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl withToken:(nullable NSString *) token responseDecoder:(nullable OSSResponseDecoderBlock)decoder
 {
     self = [super initWithFederationTokenGetter:^OSSFederationToken * {
         NSURL * url = [NSURL URLWithString:self.authServerUrl];
-        NSURLRequest * request = [NSURLRequest requestWithURL:url];
+        NSMutableURLRequest * request = [NSMutableURLRequest requestWithURL:url];
+        if (token) {
+            // add basic auth header to request
+            [request setValue:[NSString stringWithFormat:@"Bearer %@", token] forHTTPHeaderField:@"Authorization"];
+            
+        }
         OSSTaskCompletionSource * tcs = [OSSTaskCompletionSource taskCompletionSource];
         NSURLSession * session = [NSURLSession sharedSession];
         NSURLSessionTask * sessionTask = [session dataTaskWithRequest:request

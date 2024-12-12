@@ -145,7 +145,8 @@ TODOTODO
 @property (nonatomic, copy) NSString * authServerUrl;
 @property (nonatomic, copy) NSData * (^responseDecoder)(NSData *);
 - (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl;
-- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl responseDecoder:(nullable OSSResponseDecoderBlock)decoder;
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl withToken:(NSString *) token;
+- (instancetype)initWithAuthServerUrl:(NSString *)authServerUrl withToken:(nullable NSString *) token responseDecoder:(nullable OSSResponseDecoderBlock)decoder;
 @end
 
 /**
